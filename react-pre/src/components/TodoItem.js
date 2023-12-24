@@ -1,16 +1,26 @@
 import React from "react"
-import {useState} from "react";
+import {useState, useRef} from "react";
 import styled from 'styled-components';
 function TodoItem(props){
+    const inputRef = useRef(null); //input창 focus하기
     const [mode, setMode] = useState('Read'); //모드 관리
     const [content_item, setContent] = useState(props.item.text); //입력한 내용 관리
 
     const input_Change=(e)=>{
-        console.log("input_Change 실행")
+        
         setContent(e.target.value)
     }
     const content_fix = (e)=>{ //수정버튼 클릭시 실행하는 함수
-        setMode('Fix')
+        if(mode==='Read'){
+            setMode('Fix')
+            inputRef.current.disabled = false;
+            inputRef.current.focus();
+        }
+        else if(mode==='Fix'){  
+            setMode('Read')
+            inputRef.current.disabled = true;
+        }
+        
     }
     const content_delete = (e)=>{ //삭제버튼 클릭시 실행하는 함수
         /*
@@ -23,31 +33,26 @@ function TodoItem(props){
     }
 
     let content = null;
-    if(mode === 'Read'){ 
-        content = <h3 className="read-content">{content_item}</h3>
-    }
-    else if(mode === 'Fix'){
-        content = <input 
+    content =  <input
         className="fix_input"
         value={content_item}
+        ref = {inputRef}
         onChange={input_Change}
         onKeyDown={(e)=>{
             if(e.key === 'Enter'){
+                inputRef.current.disabled = true;
                 setMode('Read')
             }
         }}
+        disabled
         ></input>
-    }
-    else if(mode === 'Delete'){
-        content = <h1>삭제모드 입니다.</h1>
-    }
     
+
     return(
         <ItemWrap>
             <div className="ItemBox">
                 <div className="item">
                     {content}
-                    <p>현재 모드: {mode}</p>
                     <button className="box-button"
                     onClick={content_fix}
                     >수정</button>
@@ -89,5 +94,12 @@ const ItemWrap = styled.div`
         margin-right:5px;
     }
     
+    .fix_input{
+        font-size: 30px;
+        border-width: 0;
+        background-color: white;
+        color: black;
+    }
+
 `
 export default TodoItem;
