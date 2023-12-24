@@ -1,13 +1,39 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
+
+function App(){
+  const getCurrentLocation=()=>{ //나의 현재 위치를 반환하는 함수
+    navigator.geolocation.getCurrentPosition((position)=>{
+      let lat = position.coords.latitude // 나의 현재 위도
+      let lon = position.coords.longitude //나의 현재 경도
+      console.log("현재 위치:", lat, lon)
+    })
+  }
+
+  useEffect(()=>{
+    getCurrentLocation()
+  },[])
+
+  return(
+    <div>
+      
+    </div>
+  );
+}
+
+export default App;
+/*
 function App() {
-  const [location, setLocation] = useState('');
+  const [location, setLocation] = useState('Seoul');
   const API_KEY = "7cc534f213b76853705c725266b671ff";
   const [result, setResult] = useState({});
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_KEY}`
   
- 
+  const change_event = (e)=>{
+    setLocation(e.target.value)
+  }
+
   const searchWeather = async (e) => { 
     if (e.key === 'Enter') { 
       try {
@@ -31,7 +57,7 @@ function App() {
         <input
           placeholder='도시를 입력하세요'
           value={location}
-          onChange={(e) => setLocation(e.target.value)}
+          onChange={change_event}
           type='text'
           onKeyDown={searchWeather}
         >
@@ -93,5 +119,7 @@ const ResultWrap = styled.div`
     margin-top: 8px;
   }
 `;
+*/
+
 
 
